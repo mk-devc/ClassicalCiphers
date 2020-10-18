@@ -1,16 +1,16 @@
 
 #!/bin/bash
 
-create_ref_table(){
-	echo "" > table.txt
-	counter=0
-	for x in {A..Z}; do  echo -n "$x " >> table.txt; echo $((counter++)) >> table.txt; done
-	cat table.txt
-}
+#create_ref_table(){
+#	echo "" > table.txt
+#	counter=0
+#	for x in {A..Z}; do  echo -n "$x " >> table.txt; echo $((counter++)) >> table.txt; done
+#	cat table.txt
+#}
 
-display_table(){
-	cat table.txt | column -t
-}
+#display_table(){
+#	cat table.txt | column -t
+#}
 
 
 ord(){ #converts decimal to character
@@ -18,8 +18,7 @@ ord(){ #converts decimal to character
 	echo $val
 }
 
-#unused variable
-val=$(create_ref_table)
+
 
 if [ $# != 1 ]
 then
@@ -29,7 +28,7 @@ else
 	# for saving key
 	if [[ -f  key.tmp ]]
 	then
-		echo "" > key.tmp
+		echo "" > key.tmp;
 	fi 
 
 	flag=0
@@ -69,7 +68,7 @@ else
 				keyArray[$i]=$keyValue
 				C=$(echo ${keyArray[@]} | tr -d [:space:] )
 		                echo "check key ${C}"
-				echo "check map table ${P}"
+				echo "check map ${P}"
 				## pefrom decryption
 				echo ""
 				plaintext=$(cat $1 | tr $P $C)
@@ -85,7 +84,7 @@ else
 				keyArray[$i]=$keyValue
 				C=$(echo ${keyArray[@]} | tr -d [:space:] )
 		                echo "check key ${C}"
-				echo "check map table ${P}"
+				echo "check map ${P}"
 				## pefrom decryption
 				echo ""
 				plaintext=$(cat $1 | tr $P $C)
@@ -100,9 +99,21 @@ else
 		read save 
 		if [[ $save = "y" ||  $save = "Y" || $save = "Yes" || $save = "YES" || $save = "yes" ]]
 		then 
-			echo "$count""st try "$C >> key.tmp
+			echo "$count""st try "$C >> key.tmp;
+			echo "$plaintext" > decrypted.txt;
+			echo -n "Quit or any other key to continue?(exit)"
+	                read ex;
+			if [[ $ex == "exit" ]]
+			then
+				$flag=1;
+				exit 0;
+			fi
+
 		else
 			continue;
 		fi
+
+
+
 	done
 fi

@@ -36,16 +36,29 @@ then
 else
         echo "" > $1.tmp
         # for saving key
-        if [[ ! -f  keyV.tmp ]]
-        then
-           echo  "" >  encrypt.tmp
-        fi
+	if [[ -f encrypt.tmp ]]
+	then
+		echo -n "Remove previous encrypted text?(y/n)";
+		read approve;
 	
-	echo -n "Enter Key :"
-	read key
+	        if [[ $approve == "y" || $approve == "Y" ]]
+	        then
+	           echo  "" >  encrypt.tmp
+	        fi
+	else
+		echo  "" >  encrypt.tmp;
+	fi;		
 
-	key=${key^^}
-	echo $key
+	echo -n "Enter Key :"
+	read  key;
+	
+	if [[ !("$key" =~ ^[a-zA-Z]+$) ]]
+	then 
+	     	echo "Input must be in letters from english text";
+		exit 1;
+	fi;
+	key=${key^^};
+	# create table
 	table=( $(createTable) )
 	# convert string to array	
 	arr=( $(for i in $(seq 0 $((${#key}-1)));do echo ${key:$i:1};done) )
@@ -57,12 +70,12 @@ else
 		# for plaintext
 		conv=${file:$i:1}
 		col=$(ord $conv)
+
 		#make it repeat using modulus
-		echo $col
 		index=$(($i%${#key}))
 		conv=${arr[$index]}
 		row=$(ord $conv)
-		echo $row
+
 		#fetch from table
 		t=${table[$row]}
 		t=${t:col:1}
@@ -70,10 +83,5 @@ else
 		echo -n $t >> encrypt.tmp;
 	done
 
- 
+	echo "View encrypted text at encrypt.tmp"; 
 fi
-
-#k=1
-#val=( $(createTable ) )
-#echo ${val[$k]}
-
